@@ -1,0 +1,52 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "ignoreDeps": [
+    "@types/node",
+    "node",
+    "@elastic/elasticsearch"
+  ],
+  "timezone": "GB",
+  "schedule": [
+    "after 8am every weekday"
+  ],
+  "hostRules": [
+    {
+      "matchHost": "https://npm.pkg.github.com/",
+      "hostType": "npm",
+      "encrypted": {
+        "token": "wcFMA/xDdHCJBTolAQ/7BXJWXxouOoZ+DGSY6uOLGVVnppa9iaDvvzRn+wFrKGWuvlXI6JJI7K7rS5GkD8T+LyCjIscwcSTBT3D/NeClcPDZGtumzELILBDTKzk5xoh2uYwmKpOGStFV1DqrHBcKtNW8HeSZei2oS7nSJNuFBGzHucp4e5fn7W6Oep2OuU4DLQKZCb/1ZPGzsGzXOsaBEqVYpjBBu0DaMtsp6M5ZHLYhg6QSpAai1p7CpyyoWWNbqFjuxhVnswjT5CJA3r9ScuMWokLkJhyNMdSHgZ5XWD4p5gVJ/4IiOTOUToUsZskGwk2i2m+irsbaW0BZ53jQu+2C/vvzSLd6P89GLkxqNm2MSi6BK0oMbRMLzc9171JwkbLSbdKW6hDcXdWDLM0mT/HwYE9HwVgcMDXiE1Mhhmm9Mvip1nD9uFn9/xRWaqq5MDLRLQxlnCP6lqbxnK2YWz1SF8dx4XROqUPYBfIuRkDU//MRcqaDgh5ajvXgHr/ue1zQbqNyAjLgWt3WbGmHOYDnBGfgZsGBe5EnAJYr23XVurFoV3kYu42efcIKMWMZQHtM4ZhzR88FxV6p1Qv8cj86cX/fLXhUwFKp1Vddgtb1X0Sh6KdIHvQiuCkTHMsrJC1Q3C872uspxsOJJ5gg2GsOw5Es3SNpQkgU+z+KfHQ9U3NUjCiaAIynvw+4GorSeQHaKTGj9mWslq05qCThuIE46hLCr+S9z5YH/evmzkMgfNGwWs3kj5xA6blMXluMJJp/ndVrnt0nXS5vs8x6e49176MRmVeaJ4Khkxkmqyg5VBw5kF/3VqNZAecoT0JI+lvGStKz5hzkpUcd1Hk0jYz2WR02XMJBZJM"
+      }
+    }
+  ],
+  "npmrc": "@cinch-labs:registry=https://npm.pkg.github.com/",
+  "packageRules": [
+    {
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch",
+        "pin"
+      ],
+      "automerge": true
+    },
+    {
+      "matchPackageNames": [
+        "aws-cdk"
+      ],
+      "matchPackagePrefixes": [
+        "@aws-cdk"
+      ],
+      "groupName": "AWS CDK",
+      "automerge": true
+    },
+    {
+      "matchPackagePatterns": [
+        "eslint"
+      ],
+      "groupName": "eslint",
+      "automerge": false
+    }
+  ]
+}

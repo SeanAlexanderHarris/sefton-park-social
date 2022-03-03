@@ -1,0 +1,109 @@
+name: Merge to Main
+concurrency: ${{ github.workflow }}
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+    compile:
+        runs-on: ubuntu-latest
+        name: Compile
+        steps:
+            - name: 'Checking out from GitHub'
+              uses: 'actions/checkout@v2'
+
+            - name: Restore node_modules
+              id: cache-node-modules
+              uses: actions/cache@v2
+              with:
+                  path: '**/node_modules'
+                  key: v1-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+            - name: Configure node and npm
+              uses: actions/setup-node@v2
+              timeout-minutes: 10
+              with:
+                  node-version: 14
+                  registry-url: https://npm.pkg.github.com/
+
+            - name: npm ci
+              if: steps.cache-node-modules.outputs.cache-hit != 'true'
+              run: npm ci
+              timeout-minutes: 10
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.GHP_TOKEN }}
+
+            - name: build
+              run: npm run build:dev
+
+    linters:
+      runs-on: ubuntu-latest
+      name: Run ESLint + Prettier
+      needs:
+        - compile
+      steps:
+        - name: "Checking out from GitHub"
+          uses: "actions/checkout@v2"
+
+        - name: Restore node_modules
+          id: cache-node-modules
+          uses: actions/cache@v2
+          with:
+            path: |
+              ~/.npm
+            key: v1-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+            restore-keys: |
+              v1-${{ runner.os }}-
+
+        - name: Configure node and npm
+          uses: actions/setup-node@v2-beta
+          with:
+            node-version: 14
+            registry-url: https://npm.pkg.github.com/
+            scope: "@cinch-labs"
+
+        - name: npm ci
+          run: npm ci
+          env:
+            NODE_AUTH_TOKEN: ${{ secrets.GHP_TOKEN }}
+
+        - name: Check with ESLint
+          run: npm run eslint
+
+        - name: Check with Prettier
+          run: npm run prettier:check
+
+    unit_test:
+      runs-on: ubuntu-latest
+      name: Run Unit Tests
+      needs:
+        - compile
+      steps:
+        - name: "Checking out from GitHub"
+          uses: "actions/checkout@v2"
+
+        - name: Restore node_modules
+          id: cache-node-modules
+          uses: actions/cache@v2
+          with:
+            path: |
+              ~/.npm
+            key: v1-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+            restore-keys: |
+              v1-${{ runner.os }}-
+
+        - name: Configure node and npm
+          uses: actions/setup-node@v2-beta
+          with:
+            node-version: 14
+            registry-url: https://npm.pkg.github.com/
+
+        - name: npm ci
+          run: npm ci
+          env:
+            NODE_AUTH_TOKEN: ${{ secrets.GHP_TOKEN }}
+
+        - name: Unit tests
+          run: npm run test

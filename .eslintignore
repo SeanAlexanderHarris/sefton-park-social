@@ -1,0 +1,9 @@
+cdk.out
+dist
+node_modules
+webpack.config.js
+*.d.ts
+jest.config.js
+prettier.config.js
+next.config.js
+babel.config.js
